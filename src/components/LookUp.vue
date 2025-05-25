@@ -86,12 +86,15 @@ const lookup = async () => {
                         (a) => a.name === artist,
                     );
                     if (!alreadyPlayed) {
-                        inner_artists.push({ name: artist, plays: 1 });
+                        inner_artists.push({
+                            name: artist.artistName,
+                            plays: 1,
+                        });
                     } else {
                         alreadyPlayed.plays++;
                     }
                 }
-            } else {
+            } else if (play.value?.artistNames) {
                 // old version
                 for (const arist of play.value?.artistNames) {
                     let alreadyPlayed = inner_artists.find(
