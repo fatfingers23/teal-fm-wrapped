@@ -79,7 +79,17 @@ const lookup = async () => {
         let inner_tracks = [];
         let inner_artists = [];
         for (const play of plays) {
+            // spot-check if play is valid
+            if (
+                play.success == false ||
+                play.value == undefined ||
+                play.value.artistName ||
+                play.value.trackName == undefined
+            ) {
+                continue;
+            }
             // new version
+            console.log(play);
             if (play.value?.artists) {
                 for (const artist of play.value?.artists) {
                     let alreadyPlayed = inner_artists.find(
@@ -111,10 +121,12 @@ const lookup = async () => {
             let alreadyPlayed = inner_tracks.find(
                 (a) => a.name === play.value.trackName,
             );
-            if (!alreadyPlayed) {
+            if (!alreadyPlayed && play?.value) {
                 inner_tracks.push({
                     name: play.value.trackName,
-                    artist: play.value.artistNames[0],
+                    artist: play.value?.artists
+                        ? play.value.artists[0].artistName
+                        : play.value.artistNames[0],
                     plays: 1,
                 });
             } else {
